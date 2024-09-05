@@ -4,3 +4,4 @@ module.exports = {
     autoprefixer: {},
   },
 }
+npm install tailwindcss --save-dev
