@@ -22,34 +22,15 @@ export function Vehicle({ setGameOver }) {
     }
   });
 
-  // Detect collisions using useRapier and trigger game over when the vehicle collides
-  const { world } = useRapier();
-
+  // Use useRapier to handle collision events
   useEffect(() => {
-    const checkCollisions = () => {
-      const bodies = world.contacts; // Get all contacts from the world
+    const unsubscribe = vehicleRef.current?.onCollide((event) => {
+      setGameOver(true); // Trigger game over on any collision
+    });
 
-      bodies.forEach((contact) => {
-        const colliderA = world.getCollider(contact.colliderA);
-        const colliderB = world.getCollider(contact.colliderB);
-
-        // Check if either of the colliders belongs to the vehicle
-        if (
-          colliderA &&
-          colliderB &&
-          (colliderA === vehicleRef.current || colliderB === vehicleRef.current)
-        ) {
-          setGameOver(true); // Trigger game over
-        }
-      });
-    };
-
-    world.registerAfterStep(checkCollisions); // Register collision check after each physics step
-
-    return () => {
-      world.unregisterAfterStep(checkCollisions); // Cleanup on unmount
-    };
-  }, [world, setGameOver]);
+    // Cleanup subscription
+    return () => unsubscribe?.();
+  }, [setGameOver]);
 
   return (
     <group ref={vehicleRef}>
