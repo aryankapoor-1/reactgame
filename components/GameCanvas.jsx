@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { Physics } from "@react-three/rapier"; // Import Physics wrapper
 import { Vehicle } from "@/components/Vehicle";
 import { FallingShapes } from "@/components/FallingShapes";
 
@@ -8,7 +9,7 @@ const GameCanvas = () => {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
-  //Score incrementing
+  // Increment score every second when the game is not over
   useEffect(() => {
     const interval = setInterval(() => {
       if (!gameOver) {
@@ -19,7 +20,7 @@ const GameCanvas = () => {
     return () => clearInterval(interval);
   }, [gameOver]);
 
-  // Submit score when game is over
+  // Submit the score when the game is over
   useEffect(() => {
     if (gameOver) {
       fetch("/api/submitScore", {
@@ -47,8 +48,12 @@ const GameCanvas = () => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[0, 5, 5]} />
         <OrbitControls />
-        <Vehicle setGameOver={setGameOver} />
-        <FallingShapes />
+
+        {/* Physics wrapper */}
+        <Physics>
+          <Vehicle setGameOver={setGameOver} />
+          <FallingShapes />
+        </Physics>
       </Canvas>
 
       {/* Game UI */}

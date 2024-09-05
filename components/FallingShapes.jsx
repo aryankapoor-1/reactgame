@@ -1,7 +1,7 @@
 import { useRapier, RigidBody } from "@react-three/rapier";
 import { Box, Sphere } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useState, useRef } from "react";
+import { useState, useEffect , useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export function FallingShapes() {
